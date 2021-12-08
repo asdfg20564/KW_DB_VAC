@@ -5,45 +5,98 @@
             <h2 class="px-4 display-8 fw-bold text-white">전체 그룹원 목록</h2>
         </div>
 
+        <div id="groupMemListApp">
+        <form name = "GroupCalcMeetupForm" method="POST" action="/group_calc_meetup">
         <div class="p-5 mb-4 bg-light">
             <div class="container-fluid py-2">
                 
+             <!--   <div class="py-4 fs-5">
+                    <ul class="list-group">
+                        <li class="list-group-item ">
+                            <input class="form-check-input me-1" type="checkbox" name = "mem_list" value="selectAll" aria-label="selectAll"
+                                id="selectAll" @click = "selectAll">
+                            모두 선택
+                        </li>
+                        <li v-for="member in groupMembers" v-bind:key = "" class="list-group-item">
+                            <input class="form-check-input me-1" type="checkbox" name = "mem_list" :value="member.uid" aria-label="friend1"
+                                :id="member.uid" v-model="CalcMember">{{ member.team }} {{ member.name }}
+                        </li>
+                    </ul>
+                </div>
+            -->
+
+    
                 <div class="form-check p-4">
                     <label><h5 class="fs-4 fw-bold">
-                        <input type="checkbox" class="check" id="checkAll"> 모두 선택
+                        <input type="checkbox" class="check" name="group_calc" id="checkAll" onclick="selectAll(this)"> 모두 선택
                     </label></h5>
                 </div>
+                <% for(var i=0; i<rows.length; i++){ %>
+                    <div class="form-check">
+                        <label><h5 class="fs-4 fw-bold">
+                            <input type="checkbox" class="check" value="<%=rows[i].uid%>" name="group_calc"> [<%=rows[i].team_name%>] <%=rows[i].legal_name %>
+                        </label></h5>
+                    </div>
+                <% } %>
                 
-                <div class="form-check">
-                    <label><h5 class="fs-4 fw-bold">
-                        <input type="checkbox" class="check"> [친구] 권유진
-                    </label></h5>
-                </div>
-                    
-                <div class="form-check">
-                    <label><h5 class="fs-4 fw-bold">
-                        <input type="checkbox" class="check"> [직장] 권지윤
-                    </label></h5>
-                </div>
-                    
-                <div class="form-check">
-                    <label><h5 class="fs-4 fw-bold">
-                        <input type="checkbox" class="check"> [가족] 김수현
-                    </label></h5>
-                </div>
-
-                <div class="form-check">
-                    <label><h5 class="fs-4 fw-bold">
-                        <input type="checkbox" class="check"> [친구] 이희진
-                    </label></h5>
-                </div>
-
                 <div class="row-md-3 mt-5 me-3 text-center">
-                    <button type="button" class="btn btn-primary me-3">모임 인원 계산</button>
-                </div>    
-
+                    <input type="submit" class="btn btn-primary me-3"value="모임 인원 계산" onclick="submit_action()">
+                </div>
+            
             </div>
         </div>
+    </form>
     </div>
 
+    <script>
+        function selectAll(selectAll)  {
+  const checkboxes 
+     = document.querySelectorAll('input[type="checkbox"]');
+  
+  checkboxes.forEach((checkbox) => {
+    checkbox.checked = selectAll.checked
+  })
+}
+
+    function submit_action(){
+        var checkall = document.getElementById( "checkAll" );
+        if(checkall.checked){
+            checkall.checked = false;
+        }
+    }
+
+        </script>
+
+<!--
+<script>
+        const axios_inst = axios.create({
+                baseURL: 'http://localhost:3000/api/'
+        })
+        
+        var groupMemListApp = new Vue({
+           el: "#groupMemListApp",
+           data: {
+            groupMembers: rows.data,
+            CalcMember: []
+           },
+           methods: {
+                loadGroupMem: async function(){
+                    for(var i=0; i<rows.data.length; i++){
+                        this.groupMembers.push({team:rows[i].team_name, name:rows[i].legal_name, uid:rows[i].uid});
+                    }
+                },
+               selectAll: async function(){
+                    const checkboxes = document.getElementsByName('mem_list');
+                    checkboxes.forEach((checkbox) => {
+                        checkbox.checked = selectAll.checked;
+                        if(selectAll.checked && checkbox != selectAll) this.CalcMember.push(checkbox.value);
+                        else this.CalcMember = [];
+                    })
+               }
+           },
+           mounted: async function(){
+            this.loadGroupMem();
+           }
+        });
+    </script>-->
     <% include ./common/footer %>
